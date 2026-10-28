@@ -1,3 +1,5 @@
+import { slugs } from '../index.js';
+
 export default (temp, product) => {
   let output = temp.replace(/{%PRODUCT_NAME%}/g, product.productName);
   output = output.replace(/{%IMAGE%}/g, product.image);
@@ -6,7 +8,7 @@ export default (temp, product) => {
   output = output.replace(/{%FROM%}/g, product.from);
   output = output.replace(/{%NUTRIENTS%}/g, product.nutrients);
   output = output.replace(/{%DESCRIPTION%}/g, product.description);
-  output = output.replace(/{%PRODUCT_ID%}/g, product.id);
+  output = output.replace(/{%PRODUCT_SLUG%}/g, slugs.at(product.id));
 
   if (!product.organic) output = output.replace(/{%NOT_ORGANIC%}/g, 'not-organic');
   return output;

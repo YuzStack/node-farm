@@ -10,13 +10,14 @@ const tempProduct = fs.readFileSync('./templates/template-product.html', 'utf-8'
 const data = fs.readFileSync('./dev-data/data.json', 'utf-8');
 const dataObj = JSON.parse(data);
 
-// TODO: Fully implement the slug trick
-const slugs = dataObj.map((el) => slugify(el.productName, { lower: true }));
+export const slugs = dataObj.map((el) => slugify(el.productName, { lower: true }));
 
 const server = http.createServer((req, res) => {
   const parsedUrl = new URL(req.url, 'http://127.0.0.1:8000');
-  const id = parsedUrl.searchParams.get('id');
   const { pathname } = parsedUrl;
+
+  const slug = pathname.split('/').at(-1);
+  const id = slugs.indexOf(slug);
 
   // Overview page
   if (pathname === '/' || pathname === '/overview') {
@@ -27,7 +28,7 @@ const server = http.createServer((req, res) => {
     res.end(overviewPage);
 
     // Product page
-  } else if (pathname === '/product') {
+  } else if (pathname.startsWith('/product')) {
     res.writeHead(200, { 'Content-Type': 'text/html' });
 
     const product = dataObj.at(id);
